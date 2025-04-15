@@ -72,8 +72,8 @@ module "igw" {
        source       = "./aws-igw"
        vpc_id       = module.custom-vpc[0].vpc_id
 }
-module "instance" {
-       source = "./modules/aws-instance"
+/*module "instance" {
+       source = "./aws-instance"
        for_each                             = { for eachNetwork in var.instance : eachNetwork.subnet_id => eachNetwork }
        host_id                              = each.value.host_id
        subnet_id                            = each.key
@@ -120,7 +120,7 @@ module "instance" {
        volume_tags                          = each.value.volume_tags  
 }
 module "nat" {
-    source = "./modules/aws-natgw"
+    source = "./aws-natgw"
     for_each                              = { for eachNetwork in var.nat : eachNetwork.allocation_id=> eachNetwork }
     allocation_id                         = each.key
     connectivity_type                     = each.value.connectivity_type  
@@ -131,4 +131,4 @@ module "nat" {
     secondary_private_ip_addresses        = each.value.secondary_private_ip_addresses 
     tags                                  = each.value.tags
   
-}
+}*/

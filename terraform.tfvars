@@ -51,7 +51,7 @@ igw = [{
   vpc_id     = "vpc-xxxxxxxx"
 }]
 
-instance = [{
+/*instance = [{
   ami                         = "ami-00bb6a80f01f03502"
   instance_type               = "t2.micro"
   associate_public_ip_address = true
@@ -61,4 +61,4 @@ nat = [{
    allocation_id            = "*******"
    private_ip               = "*******"
    subnet_id                = "subnet-0caafad8c1d8c5063"
-}]
+}]*/

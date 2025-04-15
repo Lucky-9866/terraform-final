@@ -90,7 +90,7 @@ variable "igw" {
     }))  
 }
 
-variable "instance" {
+/*variable "instance" {
   type = list(object({
 
     host_id                              = optional(string)
@@ -154,4 +154,4 @@ variable "nat" {
    tags                               = optional(map(string))
 }
  ))
- }
+ }*/
