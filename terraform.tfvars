@@ -6,7 +6,7 @@ vpc = [{
 subnet = [{
   name                            = "subnet-1"
   vpc_id                          = "vpc-0abcd1234efgh5678"
-  cidr_block                      = "10.0.0.0/22"
+  cidr_block                      = "10.0.0.0/21"
   availability_zone               = "ap-south-1a"
   tags                            = {Name = "my subnet"}
 }]
@@ -37,18 +37,18 @@ sgrules = [{
   ]
 }]
 
-/*route_table = [{
-  cidr_block = ["10.0.0.0/23"]
-  vpc_id     = "vpc-xxxxxxxx"
+route_table = [{
+  cidr_block = "10.0.0.0/21"
+  vpc_id     = "vpc-0abcd1234efgh5678"
   tags       = { "Name" : "route_table" }
 }]
-
 routetableassoc = [{
   route_table_id  = "rtb-0ebc0a35016475ecd"
   subnet_id       = "subnet-0caafad8c1d8c5063"
 }]
-/*igw = [{
-  vpc_id     = "vpc-xxxxxxxx"
+
+igw = [{
+  vpc_id     = "vpc-0abcd1234efgh5678"
 }]
 
 /*instance = [{

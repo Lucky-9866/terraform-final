@@ -55,12 +55,12 @@ variable "sgrules" {
     })))
   }))
 }
-/*variable "route_table" {
+variable "route_table" {
 
   type = list(object({
     vpc_id                     = optional(string)
     carrier_gateway_id         = optional(string)
-    cidr_block                 = optional(list(string))
+    cidr_block                 = optional(string)
     core_network_arn           = optional(string)
     destination_prefix_list_id = optional(string)
     egress_only_gateway_id     = optional(string)
@@ -84,7 +84,7 @@ variable "routetableassoc" {
        subnet_id                            = optional(string)           
     }))
 }
-/*variable "igw" {
+variable "igw" {
    type = list(object({
      vpc_id                     = optional(string)         
     }))  
