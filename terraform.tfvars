@@ -50,15 +50,15 @@ routetableassoc = [{
 igw = [{
   vpc_id     = "vpc-0abcd1234efgh5678"
 }]
+/*nat = [{
+   allocation_id            = "*******"
+   private_ip               = "*******"
+   subnet_id                = "subnet-0caafad8c1d8c5063"
+}]
 
 /*instance = [{
   ami                         = "ami-00bb6a80f01f03502"
   instance_type               = "t2.micro"
   associate_public_ip_address = true
   tags                        = "name : aws_instance"  
-}]
-nat = [{
-   allocation_id            = "*******"
-   private_ip               = "*******"
-   subnet_id                = "subnet-0caafad8c1d8c5063"
 }]*/

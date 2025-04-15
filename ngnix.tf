@@ -16,7 +16,7 @@ module "custom-vpc" {
   tags                                 = each.value.tags
 }
 
-module "subnet" {
+module "subnet_id" {
   source                          = "./aws-subnet"
   for_each                        = { for eachNetwork in var.subnet : eachNetwork.cidr_block => eachNetwork }
   vpc_id                          = module.custom-vpc["10.0.0.0/21"].vpc_id
@@ -42,18 +42,18 @@ module "security-groups" {
   ingress     = each.value.ingress
   egress      = each.value.egress
 }
-module "route-table" {
+module "routetable_id" {
   source                     = "./aws-routetable"
-  for_each                   = { for eachNetwork in var.route_table : index(var.route_table, eachNetwork) => eachNetwork }
+  for_each                   = { for eachNetwork in var.route_table : eachNetwork.cidr_block => eachNetwork }
   depends_on                 = [ module.custom-vpc ]
-  cidr_block                 = [each.value.cidr_block]
+  cidr_block                 = each.key
   vpc_id                     = module.custom-vpc["10.0.0.0/21"].vpc_id
   carrier_gateway_id         = each.value.carrier_gateway_id
   core_network_arn           = each.value.core_network_arn
   destination_prefix_list_id = each.value.destination_prefix_list_id
   egress_only_gateway_id     = each.value.egress_only_gateway_id
   ipv6_cidr_block            = each.value.ipv6_cidr_block
-  gateway_id                 = each.value.gateway_id
+  gateway_id                 = module.igw.internet_gateway
   local_gateway_id           = each.value.local_gateway_id
   nat_gateway_id             = each.value.nat_gateway_id
   network_interface_id       = each.value.network_interface_id
@@ -66,15 +66,15 @@ module "route-table" {
 }
 module "routetableassoc" {
   source         = "./aws-routetableassoc"
-  subnet_id      = module.subnet.aws_subnet_main.id
-  route_table_id = module.rt.aws_route_table_main.id
+  subnet_id      = module.subnet.subnet_id
+  route_table_id = module.routetable.route_table_id
 }
 
 module "mygateway" {
-  source         = "../aws-igw"
+  source         = "./aws-igw"
   depends_on     = [ module.custom-vpc ]
   vpc_id         = module.custom-vpc["10.0.0.0/21"].vpc_id
-  
+ 
 }
 
 
@@ -116,7 +116,6 @@ module "mygateway" {
        secondary_private_ips                = each.value.secondary_private_ips
        source_dest_check                    = each.value.source_dest_check
        spot_instance_request_id             = each.value.spot_instance_request_id
-       tags_all                             = each.value.tags_all
        tenancy                              = each.value.tenancy
        user_data                            = each.value.user_data
        user_data_base64                     = each.value.user_data_base64
@@ -124,14 +123,16 @@ module "mygateway" {
        vpc_security_group_ids               = each.value.vpc_security_group_ids 
        hibernation                          = each.value.hibernation
        volume_tags                          = each.value.volume_tags  
-}*/
+       tags                                 = each.value.tags
+}
+*/
 /*module "nat" {
     source = "./aws-natgw"
     for_each                              = { for eachNetwork in var.nat : eachNetwork.allocation_id=> eachNetwork }
     allocation_id                         = each.key
     connectivity_type                     = each.value.connectivity_type  
     private_ip                            = each.value.private_ip
-    subnet_id                             = veach.value.subnet_id
+    subnet_id                             = each.value.subnet_id
     secondary_allocation_ids              = each.value.secondary_allocation_ids
     secondary_private_ip_address_count    = each.value.secondary_private_ip_address_count
     secondary_private_ip_addresses        = each.value.secondary_private_ip_addresses 
