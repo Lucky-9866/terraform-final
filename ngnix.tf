@@ -1,7 +1,7 @@
 module "custom-vpc" {
   source                               = "./aws-vpc"
-  for_each                             = { for eachNetwork in var.vpc : index(var.vpc, eachNetwork) => eachNetwork }
-  cidr_block                           = each.value.cidr_block
+  for_each                             = { for eachNetwork in var.vpc : eachNetwork.cidr_block => eachNetwork }
+  cidr_block                           = each.key
   ipv4_ipam_pool_id                    = each.value.ipv4_ipam_pool_id
   instance_tenancy                     = each.value.instance_tenancy
   ipv6_ipam_pool_id                    = each.value.ipv6_ipam_pool_id
@@ -18,9 +18,9 @@ module "custom-vpc" {
 
 module "subnet" {
   source                          = "./aws-subnet"
-  for_each                        = { for eachNetwork in var.subnet : index(var.subnet, eachNetwork) => eachNetwork }
-  vpc_id                          = module.vpc.aws_vpc_main.id
-  cidr_block                      = each.value.cidr_block
+  for_each                        = { for eachNetwork in var.subnet : eachNetwork.cidr_block => eachNetwork }
+  vpc_id                          = each.value.vpc_id
+  cidr_block                      = each.key
   availability_zone               = each.value.availability_zone
   map_public_ip_on_launch         = each.value.map_public_ip_on_launch
   assign_ipv6_address_on_creation = each.value.assign_ipv6_address_on_creation
@@ -45,9 +45,9 @@ module "security-groups" {
 module "route-table" {
   source                     = "./aws-routetable"
   for_each                   = { for eachNetwork in var.route_table : eachNetwork.cidr_block => eachNetwork }
-  vpc_id                     = module.vpc.aws_vpc_main.id
+  vpc_id                     = each.value.vpc_id
   carrier_gateway_id         = each.value.carrier_gateway_id
-  cidr_block                 = each.value.cidr_block
+  cidr_block                 = each.key
   core_network_arn           = each.value.core_network_arn
   destination_prefix_list_id = each.value.destination_prefix_list_id
   egress_only_gateway_id     = each.value.egress_only_gateway_id
@@ -68,11 +68,11 @@ module "routetableassoc" {
   subnet_id      = module.subnet.aws_subnet_main.id
   route_table_id = module.rt.aws_route_table_main.id
 }
-module "igw" {
+/*module "igw" {
        source       = "./aws-igw"
        vpc_id       = module.custom-vpc[0].vpc_id
 }
-/*module "instance" {
+ module "instance" {
        source = "./aws-instance"
        for_each                             = { for eachNetwork in var.instance : eachNetwork.subnet_id => eachNetwork }
        host_id                              = each.value.host_id
